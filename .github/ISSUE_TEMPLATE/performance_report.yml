@@ -1,0 +1,34 @@
+name: Workload or performance report
+description: Share reproducible policy behavior, improvements, or regressions.
+title: "[Workload] "
+body:
+  - type: dropdown
+    id: evidence
+    attributes:
+      label: Evidence type
+      options:
+        - GPU server measurement
+        - CPU ordering simulation
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment and configuration
+      description: Exact versions, GPU/model, flags, and CACHEFLOW settings.
+    validations:
+      required: true
+  - type: textarea
+    id: inputs
+    attributes:
+      label: Reproducible inputs
+      description: Sanitized trace or generator command, seeds, loads, warmup, and baseline setup.
+    validations:
+      required: true
+  - type: textarea
+    id: results
+    attributes:
+      label: Results and limitations
+      description: Raw metric links, tails, goodput, failures, overhead, fairness, repeats, and regressions.
+    validations:
+      required: true

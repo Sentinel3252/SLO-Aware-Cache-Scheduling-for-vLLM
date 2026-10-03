@@ -1,0 +1,3 @@
+# vLLM's supported runtime is Linux. Keep this pin aligned with the audited
+# compatibility target in README.md and rerun scripts/check_vllm_compat.py on upgrade.
+vllm==0.28.0; platform_system == "Linux"

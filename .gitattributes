@@ -1,0 +1,12 @@
+# Auto detect text files and perform LF normalization
+* text=auto eol=lf
+*.sh text eol=lf
+*.py text eol=lf
+*.yml text eol=lf
+*.md text eol=lf
+
+# Keep personal notes and generated artifacts out of source archives.
+/.local export-ignore
+/interview export-ignore
+/results export-ignore
+/benchmark/traces export-ignore

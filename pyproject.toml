@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cacheflow-scheduler"
+dynamic = ["version"]
+description = "Cache-, residual-work-, aging-, and SLO-aware waiting-queue scheduling for vLLM V1"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [{ name = "CacheFlow contributors" }]
+dependencies = []
+keywords = ["vllm", "llm", "scheduling", "prefix-cache", "inference", "slo"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: System :: Distributed Computing",
+]
+
+[project.urls]
+Homepage = "https://github.com/Sentinel3252/SLO-Aware-Cache-Scheduling-for-vLLM"
+Repository = "https://github.com/Sentinel3252/SLO-Aware-Cache-Scheduling-for-vLLM"
+Documentation = "https://github.com/Sentinel3252/SLO-Aware-Cache-Scheduling-for-vLLM/tree/main/docs"
+Issues = "https://github.com/Sentinel3252/SLO-Aware-Cache-Scheduling-for-vLLM/issues"
+Changelog = "https://github.com/Sentinel3252/SLO-Aware-Cache-Scheduling-for-vLLM/blob/main/CHANGELOG.md"
+
+[project.optional-dependencies]
+benchmark = [
+  "httpx>=0.27",
+  "matplotlib>=3.8",
+]
+dev = [
+  "build>=1.2",
+  "twine>=6",
+  "ruff==0.12.12",
+]
+
+[project.scripts]
+cacheflow-generate = "benchmark.workload_generator:main"
+cacheflow-bench = "benchmark.client:main"
+cacheflow-report = "benchmark.report:main"
+cacheflow-simulate = "benchmark.simulator:main"
+cacheflow-check-vllm = "cacheflow.tools.check_vllm_compat:main"
+cacheflow-outputs = "cacheflow.tools.output_equivalence:main"
+cacheflow-ablate = "cacheflow.tools.run_simulation_ablation:main"
+cacheflow-study = "cacheflow.tools.run_simulation_study:main"
+
+[tool.setuptools.dynamic]
+version = {attr = "cacheflow.__version__"}
+
+[tool.setuptools.packages.find]
+include = ["cacheflow*", "benchmark*"]
+exclude = ["benchmark.traces*"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]

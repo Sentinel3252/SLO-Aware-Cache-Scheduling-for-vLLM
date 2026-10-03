@@ -1,0 +1,31 @@
+name: Bug report
+description: Report a reproducible behavior or integration failure.
+title: "[Bug] "
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+      description: Include commands, sanitized input, and relevant CACHEFLOW variables.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: CacheFlow commit/version, Python, OS, vLLM commit/version, GPU/model, and server flags where applicable.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Remove credentials and private prompts before sharing.
+      render: text

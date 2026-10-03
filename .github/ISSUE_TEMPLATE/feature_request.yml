@@ -1,0 +1,23 @@
+name: Feature request
+description: Propose a capability or improvement.
+title: "[Feature] "
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Use case
+      description: Describe the workflow, workload, and limitation you encounter.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed behavior
+      description: Include alternatives and scheduling-boundary implications.
+    validations:
+      required: true
+  - type: textarea
+    id: validation
+    attributes:
+      label: How to validate
+      description: What evidence or acceptance criteria would show the improvement?
