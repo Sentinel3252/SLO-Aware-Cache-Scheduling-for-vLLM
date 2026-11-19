@@ -53,6 +53,8 @@ The report shows TTFT percentiles, failures, SLO attainment, and SLO goodput.
 These are **simulated values**, produced by a serial prefill model with an
 unlimited prefix cache. They describe ordering behavior, not vLLM performance.
 See [getting started](docs/getting-started.md) for virtual environments and CLI usage.
+Replay checks each request and its unique ID before starting. Invalid records
+report the trace path and line number. See the [trace format](docs/trace-format.md).
 
 ## Run with vLLM
 

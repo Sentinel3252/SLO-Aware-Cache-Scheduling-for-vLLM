@@ -8,7 +8,7 @@ encoded as UTF-8. Use a unique request ID for every request in a file.
 
 | Field | Type | Required / default | Meaning |
 | --- | --- | --- | --- |
-| `request_id` | string | Required | Unique request identity used in queues and output comparison |
+| `request_id` | nonempty string | Required | Unique request identity used in queues and output comparison |
 | `arrival_ms` | number | Required | Planned arrival in milliseconds relative to the start of replay |
 | `prompt` | string | Required | Prompt sent to the completion endpoint |
 | `prompt_tokens_estimate` | integer | Required | Synthetic or externally measured prompt length used by the simulator |
@@ -17,9 +17,13 @@ encoded as UTF-8. Use a unique request ID for every request in a file.
 | `ttft_slo_ms` | number or null | `null` | TTFT target for simulation ranking and client reporting |
 
 Use finite, nonnegative arrival times, positive integer token counts, and finite,
-positive SLO targets when a target is set. JSON keys must match the fields above.
-Omitted optional fields use their defaults. Blank lines are ignored, and arrival
-times do not have to be sorted in the file.
+positive SLO targets when a target is set. JSON booleans are invalid as numbers.
+JSON keys must match the fields above. Omitted optional fields use their defaults.
+Blank lines are ignored, and arrival times do not have to be sorted in the file.
+
+Replay validates the entire trace before starting. Invalid records report the
+path and physical line number. When an ID appears twice, the error identifies both
+its original line and the line that repeats it.
 
 `prompt_tokens_estimate` is not sent as an HTTP token count. Validate prompt lengths
 with the target tokenizer when measuring a real server. The synthetic word counts

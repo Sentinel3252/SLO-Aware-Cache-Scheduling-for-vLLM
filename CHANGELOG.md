@@ -25,6 +25,8 @@ that a tag or package has been published.
 
 ### Fixed
 
+- Reject invalid trace records and duplicate request IDs before replay. Diagnostics
+  include the trace path and physical line number.
 - Reject non-finite floating-point policy parameters at startup.
 - Reject empty output captures/comparisons and nonpositive capture limits.
 - Validate generator dimensions, mixed lengths, finite QPS and SLO targets, and
