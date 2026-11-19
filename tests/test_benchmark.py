@@ -2,15 +2,31 @@ from __future__ import annotations
 
 import math
 import random
+import tempfile
 import unittest
+from pathlib import Path
 
 from benchmark.metrics_collector import percentile
+from benchmark.schema import TraceRequest, read_trace, write_trace
 from benchmark.simulator import simulate
 from benchmark.workloads import cache_free, poisson_arrivals, rag
 from cacheflow.config import CARASConfig, SchedulingMode
 
 
 class BenchmarkTests(unittest.TestCase):
+    def test_simulator_retains_unique_requests_with_equal_arrival_times(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "same-arrival.jsonl"
+            write_trace(
+                path,
+                [
+                    TraceRequest("first", 0, "One", 4),
+                    TraceRequest("second", 0, "Two", 4),
+                ],
+            )
+            rows = simulate(read_trace(path), CARASConfig(mode=SchedulingMode.FCFS))
+        self.assertEqual([row["request_id"] for row in rows], ["first", "second"])
+
     def test_poisson_rejects_nonpositive_and_nonfinite_rates(self) -> None:
         for qps in (0, -1, math.nan, math.inf, -math.inf):
             with self.subTest(qps=qps), self.assertRaisesRegex(ValueError, "qps"):

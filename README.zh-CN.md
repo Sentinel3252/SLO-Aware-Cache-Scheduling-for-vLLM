@@ -38,6 +38,9 @@ cacheflow-report --input FCFS=results/fcfs.jsonl --input CARAS=results/caras.jso
 这份报告使用串行 prefill 和无限 prefix cache 的简化模型，适合观察排序行为，
 不能用来判断真实 GPU 性能。
 
+回放开始前会校验所有请求及 ID 的唯一性。遇到无效记录时会报告文件路径和行号。
+详细字段见 [trace 格式](docs/trace-format.md)。
+
 ## 接入 vLLM
 
 在具备兼容 GPU 运行环境的 Linux 主机上，使用同一个 Python 环境：

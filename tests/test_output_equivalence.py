@@ -7,12 +7,67 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-from unittest.mock import patch
+from unittest.mock import call, patch
 
+from benchmark.schema import TraceRequest, write_trace
 from cacheflow.tools.output_equivalence import capture, compare
 
 
 class OutputEquivalenceTests(unittest.TestCase):
+    def test_capture_checks_the_whole_trace_before_limiting_requests(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            trace = root / "duplicate.jsonl"
+            args = argparse.Namespace(
+                trace=trace, output=root / "capture.json", limit=1
+            )
+            first = TraceRequest("same", 0, "First", 4)
+            write_trace(trace, [first, first])
+            with (
+                patch("cacheflow.tools.output_equivalence._complete") as complete,
+                self.assertRaisesRegex(ValueError, r":2: duplicate request_id 'same'"),
+            ):
+                capture(args)
+            complete.assert_not_called()
+            self.assertFalse(args.output.exists())
+
+    def test_capture_retains_all_unique_requests_without_reordering(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            trace = root / "valid.jsonl"
+            args = argparse.Namespace(
+                trace=trace,
+                output=root / "capture.json",
+                limit=10,
+                base_url="http://example.invalid",
+                model="test",
+            )
+            write_trace(
+                trace,
+                [
+                    TraceRequest("later", 15.5, "你好", 3),
+                    TraceRequest("earlier", 0, "hello", 2, max_tokens=8),
+                ],
+            )
+            first, second = {"text": "一"}, {"text": "two"}
+            with (
+                patch(
+                    "cacheflow.tools.output_equivalence._complete",
+                    side_effect=[first, second],
+                ) as complete,
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
+                capture(args)
+            self.assertEqual(
+                complete.call_args_list,
+                [
+                    call(args.base_url, args.model, "你好", 16),
+                    call(args.base_url, args.model, "hello", 8),
+                ],
+            )
+            output = json.loads(args.output.read_text(encoding="utf-8"))
+            self.assertEqual(output, {"later": first, "earlier": second})
+
     def test_empty_or_nonmapping_capture_files_fail(self) -> None:
         valid = {"r": {"text": "answer"}}
         with tempfile.TemporaryDirectory() as directory:
